@@ -1,0 +1,11 @@
+.vs
+Messenger.Client/bin
+Messenger.Client/obj
+Messenger.Domain/bin
+Messenger.Domain/obj
+Messenger.EntityFrameworkCore/bin
+Messenger.EntityFrameworkCore/obj
+Messenger.Shared/obj
+Messenger.Shared/bin
+Messenger.Server/bin
+Messenger.Server/obj
