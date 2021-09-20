@@ -13,6 +13,12 @@
         <DataTemplate DataType="{x:Type viewModels:RegisterViewModel}">
             <local:RegisterView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:LoginViewModel}">
+            <local:LoginView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:MessengerViewModel}">
+            <local:MessengerView/>
+        </DataTemplate>
     </Window.Resources>
 
     <b:Interaction.Triggers>

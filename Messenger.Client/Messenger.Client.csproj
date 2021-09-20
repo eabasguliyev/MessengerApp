@@ -8,9 +8,9 @@
 
   <ItemGroup>
     <Folder Include="MVVM\Models\" />
+    <Folder Include="MVVM\Services\" />
     <Folder Include="MVVM\ViewModels\" />
     <Folder Include="MVVM\Views\Services\" />
-    <Folder Include="Events\" />
     <Folder Include="Startup\" />
   </ItemGroup>
 

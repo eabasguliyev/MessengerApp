@@ -4,6 +4,7 @@
     {
         Register,
         Authentication,
+        GetChats
     }
 
     public class RequestProtocol

@@ -3,7 +3,7 @@ using Prism.Events;
 
 namespace Messenger.Client.Events
 {
-    public class OpenChatsViewEvent:PubSubEvent<User>
+    public class OpenMessengerViewEvent:PubSubEvent<User>
     {
         
     }

@@ -3,6 +3,7 @@ using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Messenger.Client.Events;
+using Messenger.Client.MVVM.Services;
 using Messenger.Client.MVVM.Views.Services;
 using Messenger.Domain;
 using Messenger.Shared;
@@ -14,54 +15,43 @@ namespace Messenger.Client.MVVM.ViewModels
 {
     public class RegisterViewModel:ObservableObject, IRegisterViewModel
     {
-        private readonly MessengerClient _client;
+        private readonly IRegisterService _registerService;
         private readonly IMessageDialogService _messageDialogService;
         private readonly IEventAggregator _eventAggregator;
 
-        public RegisterViewModel(MessengerClient client, IMessageDialogService messageDialogService, IEventAggregator eventAggregator)
+        public RegisterViewModel(IRegisterService registerService, IMessageDialogService messageDialogService, IEventAggregator eventAggregator)
         {
-            _client = client;
+            _registerService = registerService;
             _messageDialogService = messageDialogService;
             _eventAggregator = eventAggregator;
 
             UserCredential = new UserCredential();
 
-            RegisterCommand = new DelegateCommand(RegisterAsync);
+            RegisterCommand = new DelegateCommand(RegisterExecute);
+            SwitchToLoginCommand = new DelegateCommand(SwitchToLoginExecute);
         }
 
         public UserCredential UserCredential { get; set; }
 
         public ICommand RegisterCommand { get; }
-        private async void RegisterAsync()
+        public ICommand SwitchToLoginCommand { get; }
+        private async void RegisterExecute()
         {
-            await _client.ConnectAsync();
+            var responseProtocol = await _registerService.Register(UserCredential);
 
-            var protocolFactory = new ProtocolFactory();
-
-            // Todo: Validate UserCredential
-
-            var requestProtocol =
-                protocolFactory.CreateRequestProtocol(RequestType.Register,
-                    JsonConvert.SerializeObject(UserCredential));
-
-            await _client.SendAsync(requestProtocol);
-
-            var responseProtocol = await _client.ReceiveAsync();
-
-            if (responseProtocol.ResponseType == ServerResponseType.UsernameIsExist)
+            if (responseProtocol.ResponseType == ServerResponseType.RegisterSuccess)
             {
-                _messageDialogService.ShowInfoDialog("Username is exist", "Info");
-                
+                _messageDialogService.ShowInfoDialog("Registration is successfully", "Info");
             }
-            else
+            else if (responseProtocol.ResponseType == ServerResponseType.UsernameIsExist)
             {
-                var user = JsonConvert.DeserializeObject<User>(responseProtocol.Content);
-
-                _messageDialogService.ShowInfoDialog($"Account created. Welcome {user.Username}", "Info");
-
-                _eventAggregator.GetEvent<OpenChatsViewEvent>().Publish(user);
+                _messageDialogService.ShowInfoDialog("Username is already exist. Try different username", "Error");
             }
+        }
 
+        private void SwitchToLoginExecute()
+        {
+            _eventAggregator.GetEvent<OpenLoginViewEvent>().Publish(nameof(LoginViewModel));
         }
     }
 }

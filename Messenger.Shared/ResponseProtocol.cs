@@ -7,6 +7,8 @@
         AuthenticationSuccess,
         UserNotFound,
         PasswordIsWrong,
+        UnknownUser,
+        Success
     }
 
     public class ResponseProtocol
